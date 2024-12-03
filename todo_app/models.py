@@ -27,8 +27,10 @@ class TodoItem(models.Model):
 
     def clean(self):
         super().clean()
-        if self.due_date and self.due_date < self.timestamp:
-            raise ValidationError('Due date cannot be before the creation timestamp.')
+        current_time = timezone.now()
+        due_date = self.due_date
+        if due_date and due_date < current_time:
+            raise ValidationError('Due date cannot be in the past.')
 
     def __str__(self):
         return self.title
