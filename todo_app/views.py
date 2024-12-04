@@ -4,13 +4,6 @@ from .models import TodoItem
 from .serializers import TodoItemSerializer
 from django.http import HttpResponse
 
-# Create your views here.
-# @api_view(['GET'])
-# def api_root(request, format=None):
-#     return Response({
-#         'todos': reverse('todo-list-create', request=request, format=format),
-#     })
-
 def home(request):
     return render(request, 'home.html')
 
