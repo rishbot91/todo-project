@@ -102,9 +102,9 @@ coverage html -d covhtml_integration
 
 ## Coverage Summary screenshots
 
-![Unit Test Coverage Summary Screenshot](coverage_screenshots\unit_test_report.png "unit_test_report")
+![Unit Test Coverage Summary Screenshot](coverage_screenshots/unit_test_report.png "Unit Test Report")
 
-![Unit Test Coverage Summary Screenshot](coverage_screenshots\integration_test_report.png "integration_test_report")
+![Integration Test Coverage Summary Screenshot](coverage_screenshots/integration_test_report.png "Integration Test Report")
 
 ## Open Coverage Reports
 ### 1. Open unit test report:
