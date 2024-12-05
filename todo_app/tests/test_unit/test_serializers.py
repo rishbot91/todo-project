@@ -10,8 +10,8 @@ class TagSerializerTest(TestCase):
         tag = Tag.objects.create(name="Important")
         serializer = TagSerializer(tag)
         expected_data = {
-            'id': tag.id,
-            'name': 'Important',
+            "id": tag.id,
+            "name": "Important",
         }
         self.assertEqual(serializer.data, expected_data)
 
@@ -32,66 +32,59 @@ class TodoItemSerializerTest(TestCase):
         serializer = TodoItemSerializer(todo)
 
         expected_data = {
-            'id': todo.id,
-            'timestamp': localtime(todo.timestamp).isoformat(),
-            'title': "Buy groceries",
-            'description': "Milk, Bread, Eggs",
-            'due_date': localtime(todo.due_date).isoformat(),
-            'status': "OPEN",
-            'tags': [
-                {'id': self.tag1.id, 'name': 'Urgent'},
-                {'id': self.tag2.id, 'name': 'Home'},
+            "id": todo.id,
+            "timestamp": localtime(todo.timestamp).isoformat(),
+            "title": "Buy groceries",
+            "description": "Milk, Bread, Eggs",
+            "due_date": localtime(todo.due_date).isoformat(),
+            "status": "OPEN",
+            "tags": [
+                {"id": self.tag1.id, "name": "Urgent"},
+                {"id": self.tag2.id, "name": "Home"},
             ],
         }
         self.assertEqual(serializer.data, expected_data)
 
     def test_todo_item_serializer_validation(self):
         data = {
-            'title': '',
-            'description': '',
-            'status': 'INVALID_STATUS',
-            'tags': [{'name': 'Work'}],
+            "title": "",
+            "description": "",
+            "status": "INVALID_STATUS",
+            "tags": [{"name": "Work"}],
         }
         serializer = TodoItemSerializer(data=data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('title', serializer.errors)
-        self.assertIn('description', serializer.errors)
-        self.assertIn('status', serializer.errors)
+        self.assertIn("title", serializer.errors)
+        self.assertIn("description", serializer.errors)
+        self.assertIn("status", serializer.errors)
+        self.assertIn("This field may not be blank.", serializer.errors["title"])
+        self.assertIn("This field may not be blank.", serializer.errors["description"])
         self.assertIn(
-            'This field may not be blank.',
-            serializer.errors['title']
-        )
-        self.assertIn(
-            'This field may not be blank.',
-            serializer.errors['description']
-        )
-        self.assertIn(
-            '"INVALID_STATUS" is not a valid choice.',
-            serializer.errors['status']
+            '"INVALID_STATUS" is not a valid choice.', serializer.errors["status"]
         )
 
     def test_validate_tags_with_duplicates(self):
         data = {
-            'title': "Duplicate Tags",
-            'description': "Testing duplicate tags.",
-            'status': "OPEN",
-            'tags': [{'name': 'Work'}, {'name': 'Work'}],
+            "title": "Duplicate Tags",
+            "description": "Testing duplicate tags.",
+            "status": "OPEN",
+            "tags": [{"name": "Work"}, {"name": "Work"}],
         }
         serializer = TodoItemSerializer(data=data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('tags', serializer.errors)
+        self.assertIn("tags", serializer.errors)
         self.assertIn(
             "Duplicate tags are not allowed for a single TodoItem.",
-            serializer.errors['tags']
+            serializer.errors["tags"],
         )
 
     def test_create_todo_item_with_tags(self):
         data = {
-            'title': "Test Create",
-            'description': "Testing create method.",
-            'due_date': timezone.now() + timezone.timedelta(days=1),
-            'status': "OPEN",
-            'tags': [{'name': 'Tag1'}, {'name': 'Tag2'}],
+            "title": "Test Create",
+            "description": "Testing create method.",
+            "due_date": timezone.now() + timezone.timedelta(days=1),
+            "status": "OPEN",
+            "tags": [{"name": "Tag1"}, {"name": "Tag2"}],
         }
         serializer = TodoItemSerializer(data=data)
         self.assertTrue(serializer.is_valid())
@@ -109,11 +102,11 @@ class TodoItemSerializerTest(TestCase):
         todo.tags.add(self.tag1)
 
         data = {
-            'title': "Updated Title",
-            'description': "Updated description.",
-            'due_date': timezone.now() + timezone.timedelta(days=2),
-            'status': "WORKING",
-            'tags': [{'name': 'Updated Tag'}, {'name': 'Home'}],
+            "title": "Updated Title",
+            "description": "Updated description.",
+            "due_date": timezone.now() + timezone.timedelta(days=2),
+            "status": "WORKING",
+            "tags": [{"name": "Updated Tag"}, {"name": "Home"}],
         }
         serializer = TodoItemSerializer(todo, data=data)
         self.assertTrue(serializer.is_valid())
@@ -123,10 +116,10 @@ class TodoItemSerializerTest(TestCase):
 
     def test_create_todo_item_without_tags(self):
         data = {
-            'title': "No Tags",
-            'description': "This TodoItem has no tags.",
-            'due_date': timezone.now() + timezone.timedelta(days=1),
-            'status': "OPEN",
+            "title": "No Tags",
+            "description": "This TodoItem has no tags.",
+            "due_date": timezone.now() + timezone.timedelta(days=1),
+            "status": "OPEN",
         }
         serializer = TodoItemSerializer(data=data)
         self.assertTrue(serializer.is_valid())

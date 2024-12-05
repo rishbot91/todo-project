@@ -18,13 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from todo_app import views
+
 # from django.views.generic import RedirectView
 # from todo_app.views import api_root
 
 urlpatterns = [
     # path('', RedirectView.as_view(url='/api/', permanent=False)),
-    path('', views.home, name='home'),
+    path("", views.home, name="home"),
     # path('', api_root, name='api-root'),
     path("admin/", admin.site.urls),
-    path('api/', include('todo_app.urls')),
+    path("api/", include("todo_app.urls")),
 ]

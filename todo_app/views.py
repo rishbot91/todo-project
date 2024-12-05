@@ -5,7 +5,7 @@ from .serializers import TodoItemSerializer
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, "home.html")
 
 
 class TodoItemListCreateView(generics.ListCreateAPIView):

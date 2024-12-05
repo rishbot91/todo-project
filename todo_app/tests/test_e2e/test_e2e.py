@@ -30,9 +30,8 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
 
     def authenticate(self):
         """Perform authentication using HTTP Basic Auth."""
-        auth_url = (
-            f"{self.live_server_url}/api/todos/"
-            .replace("://", f"://{self.username}:{self.password}@")
+        auth_url = f"{self.live_server_url}/api/todos/".replace(
+            "://", f"://{self.username}:{self.password}@"
         )
         self.driver.get(auth_url)
 
@@ -63,10 +62,7 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
         raw_content.send_keys(json.dumps(create_data))
 
         # Click the "POST" button
-        post_button = self.driver.find_element(
-                        By.XPATH,
-                        "//button[text()='POST']"
-        )
+        post_button = self.driver.find_element(By.XPATH, "//button[text()='POST']")
         post_button.click()
 
         # Verify the Todo item was created
@@ -94,9 +90,8 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
 
     def update_todo_item(self, todo_id):
         """Step 3: Update a Todo item."""
-        update_url = (
-            f"{self.live_server_url}/api/todos/{todo_id}/"
-            .replace("://", f"://{self.username}:{self.password}@")
+        update_url = f"{self.live_server_url}/api/todos/{todo_id}/".replace(
+            "://", f"://{self.username}:{self.password}@"
         )
         self.driver.get(update_url)
 
@@ -118,10 +113,7 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
         raw_content.send_keys(json.dumps(update_data))
 
         # Click the "PUT" button
-        put_button = self.driver.find_element(
-                        By.XPATH,
-                        "//button[text()='PUT']"
-        )
+        put_button = self.driver.find_element(By.XPATH, "//button[text()='PUT']")
         put_button.click()
 
         # Verify the Todo item was updated
@@ -131,17 +123,13 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
 
     def delete_todo_item(self, todo_id):
         """Step 4: Delete a Todo item."""
-        delete_url = (
-            f"{self.live_server_url}/api/todos/{todo_id}/"
-            .replace("://", f"://{self.username}:{self.password}@")
+        delete_url = f"{self.live_server_url}/api/todos/{todo_id}/".replace(
+            "://", f"://{self.username}:{self.password}@"
         )
         self.driver.get(delete_url)
 
         # Locate and click the DELETE button
-        delete_button = self.driver.find_element(
-                        By.XPATH,
-                        "//button[text()='DELETE']"
-        )
+        delete_button = self.driver.find_element(By.XPATH, "//button[text()='DELETE']")
         delete_button.click()
 
         # Confirm the deletion in the modal

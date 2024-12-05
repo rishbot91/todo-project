@@ -12,12 +12,12 @@ class Tag(models.Model):
 
 class TodoItem(models.Model):
     STATUS_CHOICES = [
-        ('OPEN', 'Open'),
-        ('WORKING', 'Working'),
-        ('PENDING REVIEW', 'Pending Review'),
-        ('COMPLETED', 'Completed'),
-        ('OVERDUE', 'Overdue'),
-        ('CANCELLED', 'Cancelled'),
+        ("OPEN", "Open"),
+        ("WORKING", "Working"),
+        ("PENDING REVIEW", "Pending Review"),
+        ("COMPLETED", "Completed"),
+        ("OVERDUE", "Overdue"),
+        ("CANCELLED", "Cancelled"),
     ]
 
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -28,7 +28,7 @@ class TodoItem(models.Model):
     status = models.CharField(
         max_length=15,
         choices=STATUS_CHOICES,
-        default='OPEN',
+        default="OPEN",
     )
 
     def clean(self):
@@ -36,7 +36,7 @@ class TodoItem(models.Model):
         current_time = timezone.now()
         due_date = self.due_date
         if due_date and due_date < current_time:
-            raise ValidationError('Due date cannot be in the past.')
+            raise ValidationError("Due date cannot be in the past.")
 
     def save(self, *args, **kwargs):
         self.full_clean()  # Calls the clean method
