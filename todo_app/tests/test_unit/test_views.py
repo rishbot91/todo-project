@@ -6,15 +6,20 @@ from todo_app.models import TodoItem, Tag
 from django.contrib.auth.models import User
 import base64
 
+
 class TodoItemAPITest(TestCase):
     def setUp(self):
         self.client = APIClient()
 
         # Create a user for Basic Authentication
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass'
+        )
 
         # Generate the Basic Authentication header
-        credentials = base64.b64encode(b'testuser:testpass').decode('utf-8')
+        credentials = base64.b64encode(
+            b'testuser:testpass'
+        ).decode('utf-8')
         self.auth_headers = {'HTTP_AUTHORIZATION': f'Basic {credentials}'}
 
         # Create initial data
@@ -26,7 +31,7 @@ class TodoItemAPITest(TestCase):
             status="OPEN"
         )
         self.todo.tags.add(self.tag)
-        
+
     def test_home_view(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
@@ -42,11 +47,18 @@ class TodoItemAPITest(TestCase):
         data = {
             'title': "Read book",
             'description': "Read 'Clean Code' book.",
-            'due_date': (timezone.now() + timezone.timedelta(days=3)).isoformat(),
+            'due_date': (
+                timezone.now() + timezone.timedelta(days=3)
+            ).isoformat(),
             'status': "OPEN",
-            'tags': [{'name': 'Reading'}]
+            'tags': [{'name': 'Reading'}],
         }
-        response = self.client.post(reverse('todo-list-create'), data, format='json', **self.auth_headers)
+        response = self.client.post(
+            reverse('todo-list-create'),
+            data,
+            format='json',
+            **self.auth_headers
+        )
         self.assertEqual(response.status_code, 201)
 
         new_todo = TodoItem.objects.get(title="Read book")
@@ -65,11 +77,18 @@ class TodoItemAPITest(TestCase):
         data = {
             'title': "Complete assignment updated",
             'description': "Updated description.",
-            'due_date': (timezone.now() + timezone.timedelta(days=2)).isoformat(),
+            'due_date': (
+                timezone.now() + timezone.timedelta(days=2)
+            ).isoformat(),
             'status': "WORKING",
-            'tags': [{'name': 'Updated Tag'}]
+            'tags': [{'name': 'Updated Tag'}],
         }
-        response = self.client.put(reverse('todo-detail', args=[self.todo.id]), data, format='json', **self.auth_headers)
+        response = self.client.put(
+            reverse('todo-detail', args=[self.todo.id]),
+            data,
+            format='json',
+            **self.auth_headers
+        )
         self.assertEqual(response.status_code, 200)
         updated_todo = TodoItem.objects.get(id=self.todo.id)
         self.assertEqual(updated_todo.title, "Complete assignment updated")

@@ -5,14 +5,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import json
 from django.contrib.auth.models import User
-from django.utils.timezone import now, timedelta
 
 
 class TodoAppE2ETest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.driver = webdriver.Chrome()  # Ensure ChromeDriver is installed and in PATH
+        cls.driver = webdriver.Chrome()
         cls.driver.implicitly_wait(10)  # Implicit wait for all elements
         cls.driver.maximize_window()
 
@@ -23,18 +22,25 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
 
     def setUp(self):
         # Create a test user
-        self.username = 'testuser'
-        self.password = 'testpassword'
-        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.username = "testuser"
+        self.password = "testpassword"
+        self.user = User.objects.create_user(
+            username=self.username, password=self.password
+        )
 
     def authenticate(self):
         """Perform authentication using HTTP Basic Auth."""
-        auth_url = f'{self.live_server_url}/api/todos/'.replace('://', f'://{self.username}:{self.password}@')
+        auth_url = (
+            f"{self.live_server_url}/api/todos/"
+            .replace("://", f"://{self.username}:{self.password}@")
+        )
         self.driver.get(auth_url)
 
     def wait_for_element(self, by, identifier, timeout=10):
         """Wait for an element to be visible."""
-        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located((by, identifier)))
+        return WebDriverWait(self.driver, timeout).until(
+            EC.visibility_of_element_located((by, identifier))
+        )
 
     def create_todo_item(self):
         """Step 1: Create a Todo item."""
@@ -50,14 +56,17 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
             "description": "Todo created via E2E test.",
             "due_date": "2024-12-06T00:00:00+05:30",
             "tags": [{"name": "E2E"}, {"name": "Test"}],
-            "status": "OPEN"
+            "status": "OPEN",
         }
         raw_content = self.wait_for_element(By.ID, "id__content")
         raw_content.clear()
         raw_content.send_keys(json.dumps(create_data))
 
         # Click the "POST" button
-        post_button = self.driver.find_element(By.XPATH, "//button[text()='POST']")
+        post_button = self.driver.find_element(
+                        By.XPATH,
+                        "//button[text()='POST']"
+        )
         post_button.click()
 
         # Verify the Todo item was created
@@ -85,8 +94,9 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
 
     def update_todo_item(self, todo_id):
         """Step 3: Update a Todo item."""
-        update_url = f"{self.live_server_url}/api/todos/{todo_id}/".replace(
-            "://", f"://{self.username}:{self.password}@"
+        update_url = (
+            f"{self.live_server_url}/api/todos/{todo_id}/"
+            .replace("://", f"://{self.username}:{self.password}@")
         )
         self.driver.get(update_url)
 
@@ -108,7 +118,10 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
         raw_content.send_keys(json.dumps(update_data))
 
         # Click the "PUT" button
-        put_button = self.driver.find_element(By.XPATH, "//button[text()='PUT']")
+        put_button = self.driver.find_element(
+                        By.XPATH,
+                        "//button[text()='PUT']"
+        )
         put_button.click()
 
         # Verify the Todo item was updated
@@ -118,17 +131,23 @@ class TodoAppE2ETest(StaticLiveServerTestCase):
 
     def delete_todo_item(self, todo_id):
         """Step 4: Delete a Todo item."""
-        delete_url = f"{self.live_server_url}/api/todos/{todo_id}/".replace(
-            "://", f"://{self.username}:{self.password}@"
+        delete_url = (
+            f"{self.live_server_url}/api/todos/{todo_id}/"
+            .replace("://", f"://{self.username}:{self.password}@")
         )
         self.driver.get(delete_url)
 
         # Locate and click the DELETE button
-        delete_button = self.driver.find_element(By.XPATH, "//button[text()='DELETE']")
+        delete_button = self.driver.find_element(
+                        By.XPATH,
+                        "//button[text()='DELETE']"
+        )
         delete_button.click()
 
         # Confirm the deletion in the modal
-        confirm_delete_button = self.wait_for_element(By.CSS_SELECTOR, ".modal-content .btn-danger")
+        confirm_delete_button = self.wait_for_element(
+            By.CSS_SELECTOR, ".modal-content .btn-danger"
+        )
         confirm_delete_button.click()
 
         # Verify the Todo item was deleted
