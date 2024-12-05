@@ -39,10 +39,10 @@ class TodoItemIntegrationTest(TestCase):
         )
         with self.assertRaises(ValidationError) as context:
             todo.clean()
-            self.assertIn(
-                "Due date cannot be in the past.",
-                str(context.exception)
-            )
+        self.assertIn(
+            "Due date cannot be in the past.",
+            str(context.exception)
+        )
 
     def test_todo_item_clean_method_valid_due_date(self):
         """Test creating a TodoItem with a valid due_date via API."""
@@ -153,7 +153,7 @@ class TodoItemIntegrationTest(TestCase):
             'status': 'WORKING',
             'tags': [{'name': 'Updated'}, {'name': 'Workflow'}],
         }
-        update_response = self.client.post(
+        update_response = self.client.put(
             detail_url,
             update_data,
             format='json',
@@ -169,15 +169,13 @@ class TodoItemIntegrationTest(TestCase):
 
         delete_response = self.client.delete(detail_url, **self.auth_headers)
         self.assertEqual(delete_response.status_code, 204)
-        self.assertEqual(
-            delete_response.status_code,
-            204
-        )
 
         confirm_response = self.client.get(detail_url, **self.auth_headers)
         self.assertEqual(confirm_response.status_code, 404)
 
     def test_todo_item_update_invalid_due_date(self):
+        """Test updating a TodoItem to have an
+        invalid due_date (past) via API."""
         todo_id = self.todo.id
         detail_url = reverse('todo-detail', args=[todo_id])
         update_data = {
@@ -189,7 +187,7 @@ class TodoItemIntegrationTest(TestCase):
             'status': self.todo.status,
             'tags': [{'name': 'Work'}],
         }
-        response = self.client.post(
+        response = self.client.put(
             detail_url,
             update_data,
             format='json',
