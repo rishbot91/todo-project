@@ -56,7 +56,7 @@ jobs:
       # Step 6: Run tests
       - name: Run all tests
         run: |
-          source venv/bin/activate
+          source env/bin/activate
           coverage run manage.py test todo_app.tests.test_unit todo_app.tests.test_integration
           coverage report -m
 
