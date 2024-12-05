@@ -37,8 +37,8 @@ jobs:
       # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          python -m venv env
+          source env/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -50,7 +50,7 @@ jobs:
       # Step 5: Run database migrations
       - name: Run migrations
         run: |
-          source venv/bin/activate
+          source env/bin/activate
           python manage.py migrate
 
       # Step 6: Run tests
@@ -63,13 +63,13 @@ jobs:
       # Step 7: Lint the code
       - name: Run Flake8
         run: |
-          source venv/bin/activate
+          source env/bin/activate
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Format code with Black
         run: |
-          source venv/bin/activate
+          source env/bin/activate
           black --check .
 
   deploy:
