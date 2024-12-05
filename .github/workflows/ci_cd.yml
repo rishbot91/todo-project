@@ -1,0 +1,89 @@
+name: Django CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-and-lint:
+    name: Run Tests and Lint
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Configure environment variables
+      - name: Set environment variables
+        run: |
+          echo "DATABASE_URL=postgres://test_user:test_password@localhost/test_db" >> $GITHUB_ENV
+
+      # Step 5: Run database migrations
+      - name: Run migrations
+        run: |
+          source venv/bin/activate
+          python manage.py migrate
+
+      # Step 6: Run tests
+      - name: Run unit tests
+        run: |
+          source venv/bin/activate
+          coverage run manage.py test todo_app.tests.test_unit todo_app.tests.test_integration
+          coverage report -m
+
+      # Step 7: Lint the code
+      - name: Run Flake8
+        run: |
+          source venv/bin/activate
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Format code with Black
+        run: |
+          source venv/bin/activate
+          black --check .
+
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: test-and-lint
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Deploy to PythonAnywhere
+      - name: Deploy to PythonAnywhere
+        env:
+          PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
+        run: |
+          curl -X POST https://www.pythonanywhere.com/api/v0/user/YOUR_USERNAME/webapps/RELOAD/
