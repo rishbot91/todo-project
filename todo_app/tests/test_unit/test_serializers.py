@@ -126,3 +126,18 @@ class TodoItemSerializerTest(TestCase):
         todo_item = serializer.save()
 
         self.assertEqual(todo_item.tags.count(), 0)
+
+    def test_validate_due_date_with_past_date(self):
+        """Test that the serializer raises a
+        ValidationError for past due_date."""
+        data = {
+            "title": "Past Due Date",
+            "description": "This task has a past due_date.",
+            "due_date": timezone.now() - timezone.timedelta(days=1),  # Past date
+            "status": "OPEN",
+            "tags": [{"name": "Work"}],
+        }
+        serializer = TodoItemSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("due_date", serializer.errors)
+        self.assertIn("Due date cannot be in the past.", serializer.errors["due_date"])
