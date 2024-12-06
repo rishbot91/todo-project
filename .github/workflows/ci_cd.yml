@@ -58,6 +58,9 @@ jobs:
 
       # Step 6: Run tests
       - name: Run all tests
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG == 'True'}}
         run: |
           source env/bin/activate
           coverage run manage.py test todo_app.tests.test_unit todo_app.tests.test_integration
