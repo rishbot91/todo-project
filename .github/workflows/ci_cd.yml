@@ -49,6 +49,9 @@ jobs:
 
       # Step 5: Run database migrations
       - name: Run migrations
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG == 'True'}}
         run: |
           source env/bin/activate
           python manage.py migrate
