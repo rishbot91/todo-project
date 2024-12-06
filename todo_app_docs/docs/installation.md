@@ -7,34 +7,34 @@
 - Git
 
 ## Steps to Install
-1. Clone the repository:
+Clone the repository:
 ```bash
 git clone https://github.com/rishbot91/todo-project.git
 cd todo_project
 ```
-2. Set up a virtual environment:
+Set up a virtual environment:
 ```bash
 python -m venv env
 source env/bin/activate  # For Linux/Mac
 env\Scripts\activate  # For Windows
-    ```
+```
 
-3. Install dependencies:
+Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Apply migrations:
+Apply migrations:
 ```bash
 python manage.py migrate
 ```
 
-5. Create a superuser:
+Create a superuser:
 ```bash
-    python manage.py createsuperuser
+python manage.py createsuperuser
 ```
 
-6. Run the development server:
+Run the development server:
 ```bash
 python manage.py runserver
 ```

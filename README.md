@@ -118,16 +118,11 @@ open covhtml_integration/index.html
 
 ## Deployment
 ### 1. Host the App
-The application is hosted on PythonAnywhere:
+The application is hosted on PythonAnywhere: brishabh91@pythonanywhere.com
 
 ### 2. Documentation
-Documentation is hosted on GitHub Pages:
+Project Documentation is hosted on: https://docs-todo-app.netlify.app/
+API Documentation: https://documenter.getpostman.com/view/40048753/2sAYBbeos2
 
-## Superuser Credentials
-For the admin panel:
-```bash
-Username: admin
-Password: admin@13579
-```
 
 

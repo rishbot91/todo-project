@@ -25,3 +25,4 @@ If the specified `task_id` does not exist:
 {
   "error": "Todo item not found."
 }
+```
