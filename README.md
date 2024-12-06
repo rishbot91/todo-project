@@ -118,11 +118,11 @@ open covhtml_integration/index.html
 
 ## Deployment
 ### 1. Host the App
-The application is hosted on PythonAnywhere: brishabh91.pythonanywhere.com
+The application is hosted on PythonAnywhere: [todo-app](brishabh91.pythonanywhere.com)
 
 ### 2. Documentation
-Project Documentation is hosted on: https://docs-todo-app.netlify.app/
-API Documentation: https://documenter.getpostman.com/view/40048753/2sAYBbeos2
+- Project Documentation is hosted on: [project-docs](https://docs-todo-app.netlify.app/)
+- API Documentation: [api-docs](https://documenter.getpostman.com/view/40048753/2sAYBbeos2)
 
 
 
