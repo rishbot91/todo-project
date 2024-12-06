@@ -57,7 +57,7 @@ jobs:
       - name: Run all tests
         run: |
           source env/bin/activate
-          coverage run manage.py test todo_app.tests.test_unit todo_app.tests.test_integration
+          coverage run --omit='manage.py' manage.py test todo_app.tests.test_unit todo_app.tests.test_integration
           coverage report -m
 
       # Step 7: Lint the code
