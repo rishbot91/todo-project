@@ -1,0 +1,14 @@
+site_name: Todo App Documentation
+theme: readthedocs
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - API Guide:
+      - Overview: overview.md
+      - Create Todo: create_todo.md
+      - View Todos: view_todos.md
+      - Update Todo: update_todo.md
+      - Delete Todo: delete_todo.md
+  - Testing: testing.md
+  - CI/CD: cicd.md
+  - Deployment: deployment.md

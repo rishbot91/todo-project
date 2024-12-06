@@ -49,18 +49,12 @@ jobs:
 
       # Step 5: Run database migrations
       - name: Run migrations
-        env:
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DEBUG: ${{ secrets.DEBUG == 'True'}}
         run: |
           source env/bin/activate
           python manage.py migrate
 
       # Step 6: Run tests
       - name: Run all tests
-        env:
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DEBUG: ${{ secrets.DEBUG == 'True'}}
         run: |
           source env/bin/activate
           coverage run manage.py test todo_app.tests.test_unit todo_app.tests.test_integration
@@ -90,8 +84,6 @@ jobs:
       # Step 2: Deploy to PythonAnywhere
       - name: Deploy to PythonAnywhere
         env:
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DEBUG: ${{ secrets.DEBUG == 'True'}}
           PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
         run: |
-          curl -X POST https://www.pythonanywhere.com/api/v0/user/YOUR_USERNAME/webapps/RELOAD/
+          curl -X POST https://www.pythonanywhere.com/api/v0/user/brishabh91/webapps/RELOAD/
