@@ -26,6 +26,102 @@ class TodoItemIntegrationTest(TestCase):
         )
         self.todo.tags.add(self.tag)
 
+    def test_todo_item_creation_with_db_query(self):
+        """Test creating a TodoItem via API and validate using a database query."""
+        create_url = reverse("todo-list-create")
+        create_data = {
+            "title": "Database Validation Task",
+            "description": "This task validates DB creation.",
+            "due_date": (timezone.now() + timezone.timedelta(days=2)).isoformat(),
+            "status": "OPEN",
+            "tags": [{"name": "DBCheck"}],
+        }
+        response = self.client.post(create_url, create_data, format="json", **self.auth_headers)
+        
+        # Validate API response
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["title"], "Database Validation Task")
+        
+        # Verify the object in the database
+        self.assertTrue(TodoItem.objects.filter(title="Database Validation Task").exists())
+        db_todo = TodoItem.objects.get(title="Database Validation Task")
+        self.assertEqual(db_todo.description, "This task validates DB creation.")
+        self.assertEqual(db_todo.status, "OPEN")
+
+    def test_todo_item_update_with_db_query(self):
+        """Test updating a TodoItem via API and validate using a database query."""
+        todo_id = self.todo.id
+        detail_url = reverse("todo-detail", args=[todo_id])
+        update_data = {
+            "title": "Updated DB Validation Task",
+            "description": "This task has been updated.",
+            "due_date": (timezone.now() + timezone.timedelta(days=4)).isoformat(),
+            "status": "WORKING",
+            "tags": [{"name": "DBUpdated"}],
+        }
+        response = self.client.put(detail_url, update_data, format="json", **self.auth_headers)
+
+        # Validate API response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["title"], "Updated DB Validation Task")
+
+        # Verify the object in the database
+        updated_todo = TodoItem.objects.get(id=todo_id)
+        self.assertEqual(updated_todo.title, "Updated DB Validation Task")
+        self.assertEqual(updated_todo.description, "This task has been updated.")
+        self.assertEqual(updated_todo.status, "WORKING")
+        self.assertTrue(updated_todo.tags.filter(name="DBUpdated").exists())
+
+    def test_todo_item_delete_with_db_query(self):
+        """Test deleting a TodoItem via API and validate using a database query."""
+        todo_id = self.todo.id
+        detail_url = reverse("todo-detail", args=[todo_id])
+
+        # Perform DELETE operation
+        delete_response = self.client.delete(detail_url, **self.auth_headers)
+        self.assertEqual(delete_response.status_code, 204)
+
+        # Verify deletion in the database
+        self.assertFalse(TodoItem.objects.filter(id=todo_id).exists())
+
+    def test_todo_item_retrieve_with_db_query(self):
+        """Test retrieving a TodoItem and validate the retrieved data."""
+        todo_id = self.todo.id
+        detail_url = reverse("todo-detail", args=[todo_id])
+
+        # Perform GET request
+        response = self.client.get(detail_url, **self.auth_headers)
+        self.assertEqual(response.status_code, 200)
+
+        # Validate response data matches the database object
+        db_todo = TodoItem.objects.get(id=todo_id)
+        self.assertEqual(response.data["title"], db_todo.title)
+        self.assertEqual(response.data["description"], db_todo.description)
+        self.assertEqual(response.data["status"], db_todo.status)
+
+    def test_todo_item_list_with_db_validation(self):
+        """Test retrieving all TodoItems and validate database object count."""
+        create_url = reverse("todo-list-create")
+
+        # Create an additional TodoItem
+        create_data = {
+            "title": "Second Todo Item",
+            "description": "This is the second item.",
+            "due_date": (timezone.now() + timezone.timedelta(days=3)).isoformat(),
+            "status": "OPEN",
+            "tags": [{"name": "Work"}],
+        }
+        self.client.post(create_url, create_data, format="json", **self.auth_headers)
+
+        # Perform GET request to retrieve all items
+        list_url = reverse("todo-list-create")
+        response = self.client.get(list_url, **self.auth_headers)
+        self.assertEqual(response.status_code, 200)
+
+        # Validate the count in the response and database
+        self.assertEqual(len(response.data), TodoItem.objects.count())
+
+
     def test_clean_method_direct(self):
         """Test the clean method directly for a past due_date."""
         todo = TodoItem(
