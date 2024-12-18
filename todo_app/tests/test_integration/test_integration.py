@@ -36,14 +36,18 @@ class TodoItemIntegrationTest(TestCase):
             "status": "OPEN",
             "tags": [{"name": "DBCheck"}],
         }
-        response = self.client.post(create_url, create_data, format="json", **self.auth_headers)
-        
+        response = self.client.post(
+            create_url, create_data, format="json", **self.auth_headers
+        )
+
         # Validate API response
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["title"], "Database Validation Task")
-        
+
         # Verify the object in the database
-        self.assertTrue(TodoItem.objects.filter(title="Database Validation Task").exists())
+        self.assertTrue(
+            TodoItem.objects.filter(title="Database Validation Task").exists()
+        )
         db_todo = TodoItem.objects.get(title="Database Validation Task")
         self.assertEqual(db_todo.description, "This task validates DB creation.")
         self.assertEqual(db_todo.status, "OPEN")
@@ -59,7 +63,9 @@ class TodoItemIntegrationTest(TestCase):
             "status": "WORKING",
             "tags": [{"name": "DBUpdated"}],
         }
-        response = self.client.put(detail_url, update_data, format="json", **self.auth_headers)
+        response = self.client.put(
+            detail_url, update_data, format="json", **self.auth_headers
+        )
 
         # Validate API response
         self.assertEqual(response.status_code, 200)
@@ -120,7 +126,6 @@ class TodoItemIntegrationTest(TestCase):
 
         # Validate the count in the response and database
         self.assertEqual(len(response.data), TodoItem.objects.count())
-
 
     def test_clean_method_direct(self):
         """Test the clean method directly for a past due_date."""
